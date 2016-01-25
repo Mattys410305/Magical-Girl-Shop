@@ -2,66 +2,85 @@
 using UnityEditor;
 using System.Collections;
 
-[CustomEditor(typeof(MoveItemOnStage))]
+[CustomEditor(typeof(MoveButtonOnScene))]
 public class MoveOnTrackButtom : Editor
 {
     enum ButtomPlace { FOREWARD, BACKWARD, LEFTLINE, RIGHTLINE, MIDLINE};
-    
 
-    int currentPlace = 0;
-    int currentLine = 0;
+    MovableItemOnStage mTarget;
+    Track track;
 
     float btnSize = 0.3f;
 
     void OnSceneGUI()
     {
-        MoveItemOnStage tar = target as MoveItemOnStage;
+        MoveButtonOnScene tmp = target as MoveButtonOnScene;
+        mTarget = tmp.transform.parent.GetComponent<MovableItemOnStage>(); ;
 
-        DrawButton(tar, ButtomPlace.FOREWARD);
-        DrawButton(tar, ButtomPlace.BACKWARD);
+        if (mTarget.transform.parent == null)
+            return;
+
+        track = mTarget.transform.parent.GetComponent<Track>();
+
+        DrawButton(Track.MoveDirection.FORWARD);
+        DrawButton(Track.MoveDirection.BACKWARD);
     }
     
-    void DrawButton(MoveItemOnStage tar, ButtomPlace place)
+    void DrawButton(Track.MoveDirection direction)
     {
         Color recordColor = Handles.color;
         Handles.color = Color.red;
 
-        Vector3 offset = getOffsetFromPlace(place);
-        Vector3 buttomPos = tar.transform.TransformPoint(offset*2.0f);
+        Vector3 offset = getOffsetFromPlace(direction);
+        Vector3 buttomPos = mTarget.transform.TransformPoint(offset*2.0f);
 
-        if (Handles.Button(buttomPos, tar.transform.rotation, btnSize, btnSize, Handles.SphereCap))
+        if (Handles.Button(buttomPos, mTarget.transform.rotation, btnSize, btnSize, Handles.SphereCap))
         {
-            moveObject(tar, place);
+            if(checkMovable(direction))
+                moveObject(direction);
         }
         Handles.color = recordColor;
     }
 
-    void moveObject(MoveItemOnStage tar, ButtomPlace place)
+    bool checkMovable(Track.MoveDirection direction)
     {
-        Vector3 posNext = Vector3.zero;
-        Vector3 offset = getOffsetFromPlace(place);
+        int lineNo = mTarget.getLineNo();
+        int index = mTarget.getIndex();
 
-        if (place == ButtomPlace.FOREWARD)
-        {
-            posNext = tar.transform.TransformPoint(offset);
-        }
-        else if (place == ButtomPlace.BACKWARD)
-        {
-            posNext = tar.transform.TransformPoint(offset);
-        }
-        tar.transform.position = posNext;
+        return track.checkMove(lineNo, index, direction);
     }
 
-    Vector3 getOffsetFromPlace(ButtomPlace place)
+
+    void moveObject(Track.MoveDirection direction)
+    {
+        Vector3 posNext = Vector3.zero;
+        Vector3 offset = getOffsetFromPlace(direction);
+
+        if (direction == Track.MoveDirection.FORWARD)
+        {
+            posNext = mTarget.transform.TransformPoint(offset);
+        }
+        else if (direction == Track.MoveDirection.BACKWARD)
+        {
+            posNext = mTarget.transform.TransformPoint(offset);
+        }
+        mTarget.transform.position = posNext;
+
+        int lineNo = mTarget.getLineNo();
+        int index = mTarget.getIndex();
+        track.moveItem(lineNo, index, direction, mTarget.blockLength);
+    }
+
+    Vector3 getOffsetFromPlace(Track.MoveDirection place)
     {
         Vector3 returnOffset = Vector3.zero;
         CreatorsManager cm = GameObject.FindObjectOfType<CreatorsManager>() as CreatorsManager;
 
-        if (place == ButtomPlace.FOREWARD)
+        if (place == Track.MoveDirection.FORWARD)
         {
             returnOffset = new Vector3(0f, 0f, cm.blockLength);
         }
-        else if (place == ButtomPlace.BACKWARD)
+        else if (place == Track.MoveDirection.BACKWARD)
         {
             returnOffset = new Vector3(0f, 0f, cm.blockLength * -1.0f);
         }

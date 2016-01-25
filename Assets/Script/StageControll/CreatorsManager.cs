@@ -8,18 +8,18 @@ public class CreatorsManager : MonoBehaviour {
 
     public ObstacleCreator[] lines;
 
-    public MoveItemOnStage[] midObstacleTypes;
+    public MovableItemOnStage[] midObstacleTypes;
     public int[] midObstacleWeights;
-    public MoveItemOnStage[] obstacleTypes;
+    public MovableItemOnStage[] obstacleTypes;
     public int[] obstacleWeights;
-    public MoveItemOnStage[] collectionTypes;
+    public MovableItemOnStage[] collectionTypes;
     public int[] collectionWeights;
 
     public float blockLength = 2.0f;
 
     CreateMode currentMode = CreateMode.Random;
     int[] currentLines;
-    MoveItemOnStage[] currentObjects;
+    MovableItemOnStage[] currentObjects;
     bool[] changeFlags;
 
     float nextBlock = 0.0f;
@@ -28,7 +28,7 @@ public class CreatorsManager : MonoBehaviour {
     void Start () {
 
         currentLines = new int[lines.Length];
-        currentObjects = new MoveItemOnStage[lines.Length];
+        currentObjects = new MovableItemOnStage[lines.Length];
         changeFlags = new bool[lines.Length];
 
         nextBlock = Time.time;
@@ -127,7 +127,7 @@ public class CreatorsManager : MonoBehaviour {
             return true;
     }
 
-    MoveItemOnStage getRandomToRoundLine(int LineNo)
+    MovableItemOnStage getRandomToRoundLine(int LineNo)
     {
 
         int totalWeight = 0;
@@ -174,7 +174,7 @@ public class CreatorsManager : MonoBehaviour {
 
     }
 
-    MoveItemOnStage getRandomToMidLine()
+    MovableItemOnStage getRandomToMidLine()
     {
         int totalWeight = 0;
         int random;

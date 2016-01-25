@@ -21,11 +21,11 @@ public class TrackWindow : EditorWindow {
     {
         EditorWindow.GetWindow<TrackWindow>();
     }
-
     
-    void OnEnable()
+    void OnDestroy()
     {
-        
+        if(currentTrack)
+            GameObject.DestroyImmediate(currentTrack);
     }
 
     //------------------------UI----------------------------
@@ -35,6 +35,7 @@ public class TrackWindow : EditorWindow {
         fileButtons();
         attributesText();
         stateCheckBoxes();
+        itemButtons();
     }
 
     void attributesText()
@@ -124,10 +125,19 @@ public class TrackWindow : EditorWindow {
         }
     }
 
+    void itemButtons()
+    {
+        if (GUILayout.Button("Add Selection Item"))
+        {
+            addSelectionItem();
+        }
+    }
+
     //-------------------Logic-------------------------------
 
     void newTrack()
     {
+        Track track;
         if (currentTrack)
         {
             Debug.Log("上一個跑道尚未完成，請先EndEdit.");
@@ -138,6 +148,9 @@ public class TrackWindow : EditorWindow {
         currentTrack.name = newTrackName;
 
         showTrack(isShowTrack);
+
+        track = currentTrack.GetComponent<Track>() as Track;
+        track.init();
     }
 
     void showTrack(bool show)
@@ -166,4 +179,31 @@ public class TrackWindow : EditorWindow {
     {
         GameObject.DestroyImmediate(currentTrack);
     }
+
+    void addSelectionItem()
+    {
+        
+        GameObject selectOb;
+        GameObject newItem;
+        Track track;
+
+        if (Selection.gameObjects.Length > 0)
+            selectOb = Selection.gameObjects[0];
+        else
+            return;
+
+        if (checkType(selectOb) && currentTrack)
+        {
+            newItem = Instantiate(selectOb, currentTrack.transform.position, currentTrack.transform.rotation) as GameObject;
+
+            track = currentTrack.GetComponent<Track>() as Track;
+            track.addNewItem(newItem);
+        }
+    }
+
+    bool checkType(GameObject ob)
+    {
+        return ob.GetComponent<MovableItemOnStage>() != null;
+    }
+
 }

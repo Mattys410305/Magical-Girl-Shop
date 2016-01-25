@@ -9,16 +9,22 @@ public class TrackDataFormat : ScriptableObject, ISerializationCallbackReceiver
     int[,] lines;
 
     [SerializeField]
-    MoveItemOnStage[,] lineObjects;
+    GameObject[,] lineObjects;
 
     public void initLength(int length)
     {
         trackLength = length;
         lines = new int[5, trackLength];
-        lineObjects = new MoveItemOnStage[5, trackLength];
+        lineObjects = new GameObject[5, trackLength];
     }
 
-    public void setLine(int index, int[] line, MoveItemOnStage[] lineObjects)
+    public void setLines(int index, int[,] lines, GameObject[,] lineObjects)
+    {
+        this.lines = lines;
+        this.lineObjects = lineObjects;
+    }
+
+    public void setLine(int index, int[] line, GameObject[] lineObjects)
     {
         for(int i=0; i < trackLength; i++)
         {

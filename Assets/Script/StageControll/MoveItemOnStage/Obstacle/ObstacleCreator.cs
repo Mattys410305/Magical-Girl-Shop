@@ -32,13 +32,13 @@ public class ObstacleCreator : MonoBehaviour {
         }*/
     }
 
-    public void createItem(MoveItemOnStage item)
+    public void createItem(MovableItemOnStage item)
     {
         if (isGameStop)
             return;
 
-        MoveItemOnStage tmpObject;
-        tmpObject = Instantiate(item, transform.position, transform.rotation) as MoveItemOnStage;
+        MovableItemOnStage tmpObject;
+        tmpObject = Instantiate(item, transform.position, transform.rotation) as MovableItemOnStage;
         tmpObject.transform.parent = stage.transform;
     }
 
