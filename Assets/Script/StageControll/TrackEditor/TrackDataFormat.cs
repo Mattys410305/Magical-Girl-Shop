@@ -1,46 +1,85 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class TrackDataFormat : ScriptableObject, ISerializationCallbackReceiver
 {
-    int trackLength = 0;
-
-    [SerializeField]
     int[,] lines;
+    string[,] lineItemNames;
 
-    [SerializeField]
-    GameObject[,] lineObjects;
-
+    // lineIndex*10 + lineNo = keyLine
+    public int trackLength = 0;
+    public List<int> keyLine = new List<int>();
+    public List<int> valueNeedBlocks = new List<int>();
+    public List<string> valueItemNames = new List<string>();
+    
     public void initLength(int length)
     {
         trackLength = length;
         lines = new int[5, trackLength];
-        lineObjects = new GameObject[5, trackLength];
+        lineItemNames = new string[5, trackLength];
     }
 
-    public void setLines(int index, int[,] lines, GameObject[,] lineObjects)
+    public void setLines(int[,] inputLines, GameObject[,] inputLineItems)
     {
-        this.lines = lines;
-        this.lineObjects = lineObjects;
-    }
+        MovableItemOnStage mItem;
+        lines = inputLines;
 
-    public void setLine(int index, int[] line, GameObject[] lineObjects)
-    {
-        for(int i=0; i < trackLength; i++)
+        for (int lineNo = 0; lineNo < 5; lineNo++)
         {
-            this.lines[index,i] = line[i];
-            this.lineObjects[index,i] = lineObjects[i];
+            for (int lineIndex = 0; lineIndex < trackLength; lineIndex++)
+            {
+                if (inputLineItems[lineNo, lineIndex])
+                {
+                    mItem = inputLineItems[lineNo, lineIndex].GetComponent<MovableItemOnStage>();
+                    lineItemNames[lineNo, lineIndex] = mItem.realName;
+                }
+            }
         }
     }
 
-
     public void OnBeforeSerialize()
     {
-
+        keyLine.Clear();
+        valueNeedBlocks.Clear();
+        valueItemNames.Clear();
+        
+        int lineNoAndIndex;
+        for (int lineNo = 0; lineNo < 5; lineNo++)
+        {
+            for (int lineIndex = 0; lineIndex < trackLength; lineIndex++)
+            {
+                if (lines[lineNo, lineIndex] != 0)
+                {
+                    lineNoAndIndex = lineIndex * 10 + lineNo;
+                    keyLine.Add(lineNoAndIndex);
+                    valueNeedBlocks.Add(lines[lineNo, lineIndex]);
+                    valueItemNames.Add(lineItemNames[lineNo,lineIndex]);
+                }
+            }
+        }
     }
+
     public void OnAfterDeserialize()
     {
+        int lineNo;
+        int lineIndex;
 
+        lines = new int[5, trackLength];
+        lineItemNames = new string[5, trackLength];
+
+        for (int i = 0; i < 5; i++)
+            for (int j = 0; j < trackLength; j++)
+                lines[i, j] = 0;
+
+        for (int i = 0; i < keyLine.Count; i++)
+        {
+            lineNo = keyLine[i] % 10;
+            lineIndex = keyLine[i] / 10;
+
+            lines[lineNo, lineIndex] = valueNeedBlocks[i];
+            lineItemNames[lineNo, lineIndex] = valueItemNames[i];
+        }
     }
 }
 

@@ -155,7 +155,7 @@ public class CreatorsManager : MonoBehaviour {
             if (tmpWeight >= random)
             {
                 changeFlags[LineNo] = true;
-                currentLines[LineNo] = obstacleTypes[index].blockLength;
+                currentLines[LineNo] = obstacleTypes[index].needBlocks;
                 return obstacleTypes[index];
             }
         }
@@ -165,7 +165,7 @@ public class CreatorsManager : MonoBehaviour {
             if (tmpWeight >= random)
             {
                 changeFlags[LineNo] = true;
-                currentLines[LineNo] = collectionTypes[index].blockLength;
+                currentLines[LineNo] = collectionTypes[index].needBlocks;
                 return collectionTypes[index];
             }
         }
@@ -198,7 +198,7 @@ public class CreatorsManager : MonoBehaviour {
             tmpWeight += midObstacleWeights[index];
             if (tmpWeight >= random)
             {
-                currentLines[lines.Length - 1] = midObstacleTypes[index].blockLength;
+                currentLines[lines.Length - 1] = midObstacleTypes[index].needBlocks;
                 changeFlags[lines.Length - 1] = true;
                 return midObstacleTypes[index];
             }

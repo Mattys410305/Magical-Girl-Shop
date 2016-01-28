@@ -4,7 +4,10 @@ using System.Collections;
 
 public class TrackWindow : EditorWindow {
 
-    const string rawTrackPath = "Assets/StageControll/Block/Track.prefab";
+    TrackDataFormat trackData;
+    const string savePath = "Assets/StageControll/Track/";
+    const string rawBlockPath = "Assets/StageControll/Block/Track.prefab";
+    const string itemPath = "Assets/StageControll/Obstacles/";
 
     GameObject trackPrefab;
     GameObject currentTrack;
@@ -118,19 +121,27 @@ public class TrackWindow : EditorWindow {
         if (isShowObstacleSize = GUILayout.Toggle(isShowObstacleSize, "Show obstacle size"))
         {
             isShowObstacleSize = false;
+            setShowObstacleSize(true);
         }
         else
         {
             isShowObstacleSize = true;
+            setShowObstacleSize(false);
         }
     }
 
     void itemButtons()
     {
+        EditorGUILayout.BeginHorizontal(EditorStyles.textField);
         if (GUILayout.Button("Add Selection Item"))
         {
             addSelectionItem();
         }
+        if (GUILayout.Button("Delete Selection Item"))
+        {
+            deleteSelectionItem();
+        }
+        EditorGUILayout.EndHorizontal();
     }
 
     //-------------------Logic-------------------------------
@@ -143,7 +154,7 @@ public class TrackWindow : EditorWindow {
             Debug.Log("上一個跑道尚未完成，請先EndEdit.");
             return;
         }
-        trackPrefab = AssetDatabase.LoadAssetAtPath(rawTrackPath, typeof(GameObject)) as GameObject;
+        trackPrefab = AssetDatabase.LoadAssetAtPath(rawBlockPath, typeof(GameObject)) as GameObject;
         currentTrack = Instantiate(trackPrefab);
         currentTrack.name = newTrackName;
 
@@ -151,6 +162,7 @@ public class TrackWindow : EditorWindow {
 
         track = currentTrack.GetComponent<Track>() as Track;
         track.init();
+
     }
 
     void showTrack(bool show)
@@ -165,7 +177,15 @@ public class TrackWindow : EditorWindow {
 
     void saveTrack()
     {
+        Track track;
+        track = currentTrack.GetComponent<Track>() as Track;
+        int[,] lines = track.getTrackLines();
+        GameObject[,] lineItems = track.getTrackItems();
 
+        trackData = ScriptableObject.CreateInstance<TrackDataFormat>();
+        trackData.initLength(newTrackLength);
+        trackData.setLines(lines, lineItems);
+        AssetDatabase.CreateAsset(trackData, savePath + currentTrack.name + ".asset");
     }
 
 
@@ -178,11 +198,11 @@ public class TrackWindow : EditorWindow {
     void endTrack()
     {
         GameObject.DestroyImmediate(currentTrack);
+        trackData = null;
     }
 
     void addSelectionItem()
     {
-        
         GameObject selectOb;
         GameObject newItem;
         Track track;
@@ -201,9 +221,43 @@ public class TrackWindow : EditorWindow {
         }
     }
 
+    void deleteSelectionItem()
+    {
+        GameObject selectOb, parentOb;
+        Track track;
+
+        if (Selection.gameObjects.Length > 0)
+            selectOb = Selection.gameObjects[0];
+        else
+            return;
+
+        if (selectOb.transform.parent)
+            parentOb = selectOb.transform.parent.gameObject;
+        else
+            parentOb = null;
+
+        if (currentTrack)
+        {
+            track = currentTrack.GetComponent<Track>() as Track;
+            if(checkType(selectOb))
+                track.deleteItem(selectOb);
+            else if(checkType(parentOb))
+                track.deleteItem(parentOb);
+        }
+    }
+
     bool checkType(GameObject ob)
     {
         return ob.GetComponent<MovableItemOnStage>() != null;
+    }
+
+    void setShowObstacleSize(bool isShow)
+    {
+        NeedSpaceOnScene[] needSpaceOnScenes = GameObject.FindObjectsOfType<NeedSpaceOnScene>();
+        foreach(NeedSpaceOnScene nsos in needSpaceOnScenes)
+        {
+            nsos.showGizmos = isShow;
+        }
     }
 
 }
