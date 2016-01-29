@@ -9,8 +9,8 @@ public class MovableItemOnStage : MonoBehaviour {
     public string realName;
 
     Track.LineNo posLineNoTrackEnum;
-    int posLineNo;
-    int posIndex;
+    int posLineNo = 4;
+    int posIndex = 0;
 
     public ItemType getItemType()
     {
@@ -34,9 +34,68 @@ public class MovableItemOnStage : MonoBehaviour {
 
     public void setPos(int lineNo, int depth)
     {
-        posLineNo = lineNo;
-        posIndex = depth;
-        switch(lineNo)
+        moveItem(lineNo, depth);
+        setTrackLineCoordinate(lineNo, depth);
+    }
+
+
+    void moveItem(int toLineNo, int toLineIndex)
+    {
+        Vector3 beginng = TranslateTrackLineToWorldCoordinate(posLineNo, posIndex);
+        Vector3 destination = TranslateTrackLineToWorldCoordinate(toLineNo, toLineIndex);
+
+        transform.position = transform.TransformPoint(destination - beginng);
+
+    }
+
+    Vector3 TranslateTrackLineToWorldCoordinate(int lineNo, int index)
+    {
+        Transform parent = transform.parent;
+        Transform originPoint = parent.transform;
+
+        Vector3 lineOffset = getLineOffset(lineNo);
+        Vector3 indexOffset = getIndexOffset(index);
+
+        return lineOffset + indexOffset;
+    }
+
+    Vector3 getLineOffset(int lineNumber)
+    {
+        Track track = GameObject.FindObjectOfType<Track>();
+        Vector3 v = Vector3.zero;
+        switch (lineNumber)
+        {
+            case 0:
+                v = Vector3.right * track.radius;
+                break;
+            case 1:
+                v = Vector3.down * track.radius;
+                break;
+            case 2:
+                v = Vector3.left * track.radius;
+                break;
+            case 3:
+                v = Vector3.up * track.radius;
+                break;
+            case 4:
+                v = Vector3.zero;
+                break;
+        }
+        return v;
+    }
+
+    Vector3 getIndexOffset(int index)
+    {
+        CreatorsManager cm = GameObject.FindObjectOfType<CreatorsManager>() as CreatorsManager;
+
+        return new Vector3(0, 0, index * cm.blockLength);
+    }
+
+    void setTrackLineCoordinate(int toLineNo, int toLineIndex)
+    {
+        posLineNo = toLineNo;
+        posIndex = toLineIndex;
+        switch (toLineNo)
         {
             case 0:
                 posLineNoTrackEnum = Track.LineNo.EAST;

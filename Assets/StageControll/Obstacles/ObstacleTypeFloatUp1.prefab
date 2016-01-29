@@ -11,6 +11,7 @@ GameObject:
   - 114: {fileID: 11445840}
   - 114: {fileID: 11456284}
   - 114: {fileID: 11428160}
+  - 114: {fileID: 11459774}
   m_Layer: 0
   m_Name: ObstacleTypeFloatUp1
   m_TagString: Untagged
@@ -50,6 +51,7 @@ GameObject:
   - 23: {fileID: 2304020}
   - 114: {fileID: 11429480}
   - 114: {fileID: 11466318}
+  - 114: {fileID: 11469220}
   m_Layer: 0
   m_Name: ObstacleCube
   m_TagString: DynamicObstacle
@@ -198,7 +200,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   needBlocks: 10
   type: 1
-  realName: type3
+  realName: ObstacleTypeFloatUp1
 --- !u!114 &11429480
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -236,6 +238,17 @@ MonoBehaviour:
   appearType: 1
   speed: 6
   appearTime: 0.5
+--- !u!114 &11459774
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 129900}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86753f4ad3b6e554cb4a2e7d12bb7a0d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &11466318
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -248,6 +261,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   showGizmos: 0
+--- !u!114 &11469220
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 199694}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86753f4ad3b6e554cb4a2e7d12bb7a0d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &11499180
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -300,7 +324,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: realName
-      value: type3
+      value: ObstacleTypeFloatUp1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}

@@ -38,6 +38,16 @@ public class TrackDataFormat : ScriptableObject, ISerializationCallbackReceiver
         }
     }
 
+    public int[,] getLineNo()
+    {
+        return lines;
+    }
+
+    public string[,] getLineItemNames()
+    {
+        return lineItemNames;
+    }
+
     public void OnBeforeSerialize()
     {
         keyLine.Clear();

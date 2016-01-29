@@ -32,6 +32,7 @@ GameObject:
   - 23: {fileID: 2373106}
   - 114: {fileID: 11437350}
   - 114: {fileID: 11471716}
+  - 114: {fileID: 11470630}
   m_Layer: 0
   m_Name: Cylinder
   m_TagString: Untagged
@@ -173,7 +174,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   needBlocks: 50
   type: 1
-  realName: circleType1
+  realName: ObstacleType3
 --- !u!114 &11437350
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -183,6 +184,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8047293d237f55c44ae9a358d9effc2f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &11470630
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 175960}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86753f4ad3b6e554cb4a2e7d12bb7a0d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &11471664
@@ -291,7 +303,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: realName
-      value: circleType1
+      value: ObstacleType3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}

@@ -15,4 +15,4 @@ MonoBehaviour:
   keyLine: 14000000
   valueNeedBlocks: 0f000000
   valueItemNames:
-  - type1
+  - ObstacleType1

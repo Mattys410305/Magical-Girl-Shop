@@ -27,7 +27,9 @@ public class PlayerController : MonoBehaviour {
 
     private float posY;
 
-	void Start () {
+    Vector2 touchStartPoint = new Vector2(0,0);
+
+    void Start () {
 	}
 
     void Update(){
@@ -103,12 +105,53 @@ public class PlayerController : MonoBehaviour {
     void dodge()
     {
         float keyDownAxisVertical = Input.GetAxisRaw("Vertical");
-            
-        if(keyDownAxisVertical < 0 && dodgingState == DodgingState.Stay)
+
+        if (Application.isConsolePlatform || Application.isEditor)
+            keyDownAxisVertical = Input.GetAxisRaw("Vertical");
+        else if (Application.isMobilePlatform)
+            keyDownAxisVertical = getMobileVerticalMove();
+
+        if (keyDownAxisVertical < 0 && dodgingState == DodgingState.Stay)
         {
             verticalSpeed = -DodgeSpeed;
             dodgingState = DodgingState.Dodging;
         }
+    }
+
+    float getMobileVerticalMove()
+    {
+        float deltaX, deltaY;
+        if (Input.touchCount <= 0)
+            return 0;
+
+        if (Input.touchCount == 1)
+        {
+            deltaX = Input.touches[0].position.x - touchStartPoint.x;
+            deltaY = Input.touches[0].position.y - touchStartPoint.y;
+
+            if (Input.touches[0].phase == TouchPhase.Began)
+            {
+                touchStartPoint = Input.touches[0].position;
+            }
+            else if (Input.touches[0].phase == TouchPhase.Moved)
+            {
+                if (Mathf.Abs(deltaY) > Mathf.Abs(deltaX) && Mathf.Abs(deltaY) > 10.0f)
+                {
+                    Debug.Log("Vertical: " + deltaY);
+                    return deltaY;
+                }
+            }
+            else if (Input.touches[0].phase == TouchPhase.Ended)
+            {
+                Debug.Log("Vertical end: " + deltaY);
+                if (Mathf.Abs(deltaY) > Mathf.Abs(deltaX) && Mathf.Abs(deltaY) > 1.0f)
+                {
+                    Debug.Log("Vertical: " + deltaY);
+                    return deltaY;
+                }
+            }
+        }
+        return 0;
     }
 
     void backForce()

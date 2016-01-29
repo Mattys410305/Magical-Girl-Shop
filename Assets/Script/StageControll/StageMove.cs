@@ -19,6 +19,9 @@ public class StageMove : MonoBehaviour {
 
     Transform floorTransform;
 
+    //Mobile 
+    Vector2 touchStartPoint = new Vector2(0,0);
+
 	void Start () {
         floorTransform = gameObject.transform.GetChild(0);
 
@@ -57,7 +60,12 @@ public class StageMove : MonoBehaviour {
 
     void spin()
     {
-        float keyDownAxisHorizontal = Input.GetAxisRaw("Horizontal");
+        float keyDownAxisHorizontal = 0;
+        
+        if (Application.isConsolePlatform || Application.isEditor)
+            keyDownAxisHorizontal = Input.GetAxisRaw("Horizontal");
+        else if (Application.isMobilePlatform)
+            keyDownAxisHorizontal = getMobileHorizontalMove();
 
         keyDownStateCange(keyDownAxisHorizontal);
         if (checkMovingRight())
@@ -68,6 +76,42 @@ public class StageMove : MonoBehaviour {
         {
             setMovingLeft();
         }
+    }
+
+    float getMobileHorizontalMove()
+    {
+        float deltaX, deltaY;
+        if (Input.touchCount <= 0)
+            return 0;
+        if (Input.touchCount == 1)
+        {
+            deltaX = Input.touches[0].position.x - touchStartPoint.x;
+            deltaY = Input.touches[0].position.y - touchStartPoint.y;
+
+            Debug.Log("Horizontal init: " + deltaX);
+            if (Input.touches[0].phase == TouchPhase.Began)
+            {
+                touchStartPoint = Input.touches[0].position;
+            }
+            else if (Input.touches[0].phase == TouchPhase.Moved)
+            {
+                if(Mathf.Abs(deltaX) > Mathf.Abs(deltaY) && Mathf.Abs(deltaX) > 10.0f)
+                {
+                    Debug.Log("Horizontal: " + deltaX);
+                    return deltaX;
+                }
+            }
+            else if (Input.touches[0].phase == TouchPhase.Ended)
+            {
+                Debug.Log("Horizontal end: " + deltaX);
+                if (Mathf.Abs(deltaX) > Mathf.Abs(deltaY) && Mathf.Abs(deltaX) > 1.0f)
+                {
+                    Debug.Log("Horizontal: " + deltaX);
+                    return deltaX;
+                }
+            }
+        }
+        return 0;
     }
 
     void keyDownStateCange(float key)

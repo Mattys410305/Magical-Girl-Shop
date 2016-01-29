@@ -31,12 +31,9 @@ public class Track : MonoBehaviour {
 
     public void addNewItem(GameObject item)
     {
+        item.transform.parent = this.transform;
         bool result = moveToFirstEmptyPlace(item);
-        if (result)
-        {
-            item.transform.parent = this.transform;
-        }
-        else
+        if (!result)
         {
             GameObject.DestroyImmediate(item);
             Debug.Log("沒有空間塞下更多障礙物(收集品)");
@@ -53,7 +50,12 @@ public class Track : MonoBehaviour {
         return lineObjects;
     }
 
-    public void deleteItem(GameObject item)
+    public void deleteItem(int lineNo, int index)
+    {
+        lines[lineNo, index] = 0;
+        lineObjects[lineNo, index] = null;
+    }
+    /*public void deleteItem(GameObject item)
     {
         MovableItemOnStage mItem = item.GetComponent<MovableItemOnStage>();
 
@@ -64,7 +66,7 @@ public class Track : MonoBehaviour {
         lineObjects[lineNo, index] = null;
 
         GameObject.DestroyImmediate(item);
-    }
+    }*/
 
     public bool checkMove(int lineNo, int pos, MoveDestination dir)
     {
@@ -124,7 +126,7 @@ public class Track : MonoBehaviour {
         return checkLineHasSpace(lineNo, startIndex, checkLength);
     }
 
-    public void moveItem(int lineNo, int pos, MoveDestination dir, int blockLength)
+    public void moveItemByDirection(int lineNo, int pos, MoveDestination dir, int blockLength)
     {
         int nextLineNo = 0;
         int nextPos = 0;
@@ -179,6 +181,20 @@ public class Track : MonoBehaviour {
 
         MovableItemOnStage mItem = lineObjects[nextLineNo, nextPos].GetComponent<MovableItemOnStage>();
         mItem.setPos(nextLineNo, nextPos);
+    }
+
+    public void moveItemTo(int srcLineNo, int srcPos, int toLineNo, int toPos)
+    {
+        lines[toLineNo, toPos] = lines[srcLineNo, srcPos];
+        lines[srcLineNo, srcPos] = 0;
+
+        GameObject tmp = new GameObject();
+        lineObjects[toLineNo, toPos] = lineObjects[srcLineNo, srcPos];
+        lineObjects[srcLineNo, srcPos] = tmp;
+        GameObject.DestroyImmediate(tmp);
+
+        MovableItemOnStage mItem = lineObjects[toLineNo, toPos].GetComponent<MovableItemOnStage>();
+        mItem.setPos(toLineNo, toPos);
     }
 
     public void activeTrack(bool active)
@@ -242,17 +258,17 @@ public class Track : MonoBehaviour {
 
     void moveToLine(GameObject item, int lineNumber, int index)
     {
-        CreatorsManager cm = GameObject.FindObjectOfType<CreatorsManager>() as CreatorsManager;
+        //CreatorsManager cm = GameObject.FindObjectOfType<CreatorsManager>() as CreatorsManager;
 
         MovableItemOnStage mItem = item.GetComponent<MovableItemOnStage>();
 
         lines[lineNumber, index] = mItem.needBlocks;
         lineObjects[lineNumber, index] = item;
 
-        Vector3 lineOffset = getLineOffset(lineNumber);
+        /*Vector3 lineOffset = getLineOffset(lineNumber);
         Vector3 lengthOffset = Vector3.forward * index * cm.blockLength;
 
-        item.transform.position = item.transform.TransformPoint(lineOffset + lengthOffset);
+        item.transform.position = item.transform.TransformPoint(lineOffset + lengthOffset);*/
 
         Debug.Log("moveToLine: ["+ lineNumber + "," + index+"]");
         mItem.setPos(lineNumber, index);

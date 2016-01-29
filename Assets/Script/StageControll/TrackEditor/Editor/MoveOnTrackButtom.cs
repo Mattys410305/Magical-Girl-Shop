@@ -59,15 +59,15 @@ public class MoveOnTrackButtom : Editor
 
     void moveObject(Track.MoveDestination direction)
     {
-        Vector3 posNext = Vector3.zero;
+        /*Vector3 posNext = Vector3.zero;
         Vector3 offset = getOffsetFromPlace(direction);
 
         posNext = mTarget.transform.TransformPoint(offset);
-        mTarget.transform.position = posNext;
+        mTarget.transform.position = posNext;*/
 
         int lineNo = mTarget.getLineNo();
         int index = mTarget.getIndex();
-        track.moveItem(lineNo, index, direction, mTarget.needBlocks);
+        track.moveItemByDirection(lineNo, index, direction, mTarget.needBlocks);
     }
 
     Vector3 getOffsetFromPlace(Track.MoveDestination dir)

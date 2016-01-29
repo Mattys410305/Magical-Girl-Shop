@@ -13,6 +13,7 @@ GameObject:
   - 23: {fileID: 2320558}
   - 114: {fileID: 11400004}
   - 114: {fileID: 11485210}
+  - 114: {fileID: 11439522}
   m_Layer: 0
   m_Name: ObstacleCube
   m_TagString: DynamicObstacle
@@ -206,6 +207,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bdbbabfe887ce264c820937278407f81, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &11439522
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 111972}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86753f4ad3b6e554cb4a2e7d12bb7a0d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &11460538
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -219,7 +231,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   needBlocks: 15
   type: 1
-  realName: type1
+  realName: ObstacleType1
 --- !u!114 &11485210
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -313,7 +325,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: realName
-      value: type1
+      value: ObstacleType1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}

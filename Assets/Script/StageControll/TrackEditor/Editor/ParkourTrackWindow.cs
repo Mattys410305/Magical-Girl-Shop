@@ -5,7 +5,7 @@ using System.Collections;
 public class TrackWindow : EditorWindow {
 
     TrackDataFormat trackData;
-    const string savePath = "Assets/StageControll/Track/";
+    const string trackPath = "Assets/StageControll/Track/";
     const string rawBlockPath = "Assets/StageControll/Block/Track.prefab";
     const string itemPath = "Assets/StageControll/Obstacles/";
 
@@ -137,10 +137,6 @@ public class TrackWindow : EditorWindow {
         {
             addSelectionItem();
         }
-        if (GUILayout.Button("Delete Selection Item"))
-        {
-            deleteSelectionItem();
-        }
         EditorGUILayout.EndHorizontal();
     }
 
@@ -185,13 +181,67 @@ public class TrackWindow : EditorWindow {
         trackData = ScriptableObject.CreateInstance<TrackDataFormat>();
         trackData.initLength(newTrackLength);
         trackData.setLines(lines, lineItems);
-        AssetDatabase.CreateAsset(trackData, savePath + currentTrack.name + ".asset");
+        AssetDatabase.CreateAsset(trackData, trackPath + currentTrack.name + ".asset");
     }
 
 
     void loadTrack()
     {
+        Object selectAsset;
+        if (checkLoadStatue() == false)
+            return;
+        
+        selectAsset = Selection.objects[0];
+        
+        trackData = AssetDatabase.LoadAssetAtPath<TrackDataFormat>(trackPath + selectAsset.name + ".asset");
+        newTrack();
+        setAssetOnTrack();
+    }
 
+    void setAssetOnTrack()
+    {
+        Track track = currentTrack.GetComponent<Track>() as Track;
+        int[,] lines = trackData.getLineNo();
+        string[,] lineItemNames = trackData.getLineItemNames();
+        GameObject itemType, loadedItem;
+
+        for(int lineNo = 4; lineNo >= 0; lineNo--)
+        {
+            for (int index = trackData.trackLength - 1; index >= 0; index--)
+            {
+                if (lines[lineNo, index] != 0)
+                {
+                    itemType = AssetDatabase.LoadAssetAtPath<GameObject>(itemPath + lineItemNames[lineNo, index] + ".prefab");
+                    Debug.Log(itemPath + lineItemNames[lineNo, index] + ": " + itemType);
+                    loadedItem = Instantiate(itemType, currentTrack.transform.position, currentTrack.transform.rotation) as GameObject;
+
+                    track.addNewItem(loadedItem);
+
+                    MovableItemOnStage mItem = loadedItem.GetComponent<MovableItemOnStage>();
+
+                    track.moveItemTo(mItem.getLineNo(), mItem.getIndex(), lineNo, index);
+                }
+            }
+
+        }
+    }
+
+    bool checkLoadStatue()
+    {
+        if (currentTrack != null)
+        {
+            Debug.Log("請先編輯好上一個跑道, 完成按EndEdit後再Load.");
+            return false;
+        }
+
+        if (Selection.objects.Length == 0)
+        {
+            Debug.Log("請點選跑道的asset再Load (Assets/StageControll/Track/檔名.asset).");
+            Debug.Log(Selection.objects.Length);
+            return false;
+        }
+
+        return true;
     }
 
 
@@ -218,31 +268,6 @@ public class TrackWindow : EditorWindow {
 
             track = currentTrack.GetComponent<Track>() as Track;
             track.addNewItem(newItem);
-        }
-    }
-
-    void deleteSelectionItem()
-    {
-        GameObject selectOb, parentOb;
-        Track track;
-
-        if (Selection.gameObjects.Length > 0)
-            selectOb = Selection.gameObjects[0];
-        else
-            return;
-
-        if (selectOb.transform.parent)
-            parentOb = selectOb.transform.parent.gameObject;
-        else
-            parentOb = null;
-
-        if (currentTrack)
-        {
-            track = currentTrack.GetComponent<Track>() as Track;
-            if(checkType(selectOb))
-                track.deleteItem(selectOb);
-            else if(checkType(parentOb))
-                track.deleteItem(parentOb);
         }
     }
 
