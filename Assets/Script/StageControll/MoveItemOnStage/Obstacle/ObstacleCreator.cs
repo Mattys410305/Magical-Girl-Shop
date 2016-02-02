@@ -15,23 +15,7 @@ public class ObstacleCreator : MonoBehaviour {
     float nextObstacle;
     float tmpNextObstacleTime;
     Obstacle newObstacle;
-
-    void Start(){
-        //nextObstacle = StartTime;
-    }
     
-	void Update () {
-	    
-        /*if (Time.time > nextObstacle && !isGameStop)
-        {
-            int randomNum = Random.Range(0, obstacleType.Length);
-            newObstacle = Instantiate(obstacleType[randomNum], transform.position, transform.rotation) as Obstacle;
-            newObstacle.transform.parent = stage.transform;
-
-            nextObstacle = Time.time + Interval;
-        }*/
-    }
-
     public void createItem(MovableItemOnStage item)
     {
         if (isGameStop)

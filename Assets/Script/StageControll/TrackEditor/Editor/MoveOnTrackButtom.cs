@@ -73,15 +73,15 @@ public class MoveOnTrackButtom : Editor
     Vector3 getOffsetFromPlace(Track.MoveDestination dir)
     {
         Vector3 returnOffset = Vector3.zero;
-        CreatorsManager cm = GameObject.FindObjectOfType<CreatorsManager>() as CreatorsManager;
-        
+        GridManager gm = GameObject.FindObjectOfType<GridManager>();
+
         switch (dir)
         {
             case Track.MoveDestination.FORWARD:
-                returnOffset = new Vector3(0f, 0f, cm.blockLength);
+                returnOffset = new Vector3(0f, 0f, gm.gridLength);
                 break;
             case Track.MoveDestination.BACKWARD:
-                returnOffset = new Vector3(0f, 0f, cm.blockLength * -1.0f);
+                returnOffset = new Vector3(0f, 0f, gm.gridLength * -1.0f);
                 break;
             case Track.MoveDestination.WESTLINE:
                 returnOffset = getWestLineOffset();

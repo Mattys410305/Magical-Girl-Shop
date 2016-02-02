@@ -50,8 +50,8 @@ public class MovableItemOnStage : MonoBehaviour {
 
     Vector3 TranslateTrackLineToWorldCoordinate(int lineNo, int index)
     {
-        Transform parent = transform.parent;
-        Transform originPoint = parent.transform;
+        /*Transform parent = transform.parent;
+        Transform originPoint = parent.transform;*/
 
         Vector3 lineOffset = getLineOffset(lineNo);
         Vector3 indexOffset = getIndexOffset(index);
@@ -86,9 +86,9 @@ public class MovableItemOnStage : MonoBehaviour {
 
     Vector3 getIndexOffset(int index)
     {
-        CreatorsManager cm = GameObject.FindObjectOfType<CreatorsManager>() as CreatorsManager;
+        GridManager gm = GameObject.FindObjectOfType<GridManager>();
 
-        return new Vector3(0, 0, index * cm.blockLength);
+        return new Vector3(0, 0, index * gm.gridLength);
     }
 
     void setTrackLineCoordinate(int toLineNo, int toLineIndex)

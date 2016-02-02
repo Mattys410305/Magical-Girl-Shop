@@ -15,15 +15,18 @@ public class CreatorsManager : MonoBehaviour {
     public MovableItemOnStage[] collectionTypes;
     public int[] collectionWeights;
 
-    public float blockLength = 2.0f;
+    GridManager gridManager;
 
     CreateMode currentMode = CreateMode.Random;
     int[] currentLines;
     MovableItemOnStage[] currentObjects;
     bool[] changeFlags;
 
-    float nextBlock = 0.0f;
+    /*float nextBlock = 0.0f;
     float interval;
+
+    bool isMoving = true;
+    float recordTimeWhenGameStop;*/
 
     void Start () {
 
@@ -31,16 +34,17 @@ public class CreatorsManager : MonoBehaviour {
         currentObjects = new MovableItemOnStage[lines.Length];
         changeFlags = new bool[lines.Length];
 
-        nextBlock = Time.time;
-        interval =  blockLength / 10.0f;
+        gridManager = GameObject.FindObjectOfType<GridManager>();
+        /*nextBlock = Time.time;
+        interval = gridManager.getGridLength() / 10.0f;*/
 
         for (int i = 0; i < currentLines.Length; i++)
             currentLines[i] = 0;
     }
-	
-	void Update () {
 
-        if (nextBlock > Time.time)
+    /*void Update () {
+
+        if (nextBlock > Time.time || isMoving == false)
             return;
 
         nextBlock += interval;
@@ -56,7 +60,23 @@ public class CreatorsManager : MonoBehaviour {
         }
 
         countDownCurrentLines();
-	}
+	}*/
+
+    public void Create()
+    {
+        cleanFlags();
+
+        if (currentMode == CreateMode.Random)
+        {
+            produceInRandomMode();
+        }
+        else if (currentMode == CreateMode.Block)
+        {
+            produceInBlockMode();
+        }
+
+        countDownCurrentLines();
+    }
 
     void cleanFlags()
     {
@@ -95,11 +115,11 @@ public class CreatorsManager : MonoBehaviour {
         {
             if(checkNeiborLines(i))
             {
-                currentObjects[i] = getRandomToRoundLine(i);
+                currentObjects[i] = chooseItemToRoundLineInRandom(i);
             }
         }
         if(checkMidLine())
-            currentObjects[lines.Length - 1] = getRandomToMidLine();
+            currentObjects[lines.Length - 1] = chooseItemToMidLineInRandom();
     }
 
     bool checkNeiborLines(int lineNo)
@@ -127,7 +147,7 @@ public class CreatorsManager : MonoBehaviour {
             return true;
     }
 
-    MovableItemOnStage getRandomToRoundLine(int LineNo)
+    MovableItemOnStage chooseItemToRoundLineInRandom(int LineNo)
     {
 
         int totalWeight = 0;
@@ -174,7 +194,7 @@ public class CreatorsManager : MonoBehaviour {
 
     }
 
-    MovableItemOnStage getRandomToMidLine()
+    MovableItemOnStage chooseItemToMidLineInRandom()
     {
         int totalWeight = 0;
         int random;
@@ -227,6 +247,19 @@ public class CreatorsManager : MonoBehaviour {
         }
     }
 
+    //----------------------------------------
+
+    /*public void play()
+    {
+        isMoving = true;
+        nextBlock = Time.time + recordTimeWhenGameStop;
+    }
+
+    public void stop()
+    {
+        isMoving = false;
+        recordTimeWhenGameStop = nextBlock - Time.time;
+    }*/
 
 }
 

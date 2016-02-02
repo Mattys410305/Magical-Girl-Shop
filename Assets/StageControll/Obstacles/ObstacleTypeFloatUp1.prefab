@@ -52,6 +52,7 @@ GameObject:
   - 114: {fileID: 11429480}
   - 114: {fileID: 11466318}
   - 114: {fileID: 11469220}
+  - 114: {fileID: 11479426}
   m_Layer: 0
   m_Name: ObstacleCube
   m_TagString: DynamicObstacle
@@ -270,6 +271,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 86753f4ad3b6e554cb4a2e7d12bb7a0d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &11479426
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 199694}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 20dd63286570cea48930f45ba59eb422, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &11499180

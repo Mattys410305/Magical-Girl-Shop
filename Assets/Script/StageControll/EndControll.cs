@@ -5,41 +5,41 @@ public class EndControll : MonoBehaviour {
 
     public PlayerController player;
 
-    StageMove stage;
-    CreatorsControll creatorsControll;
+    /*StageMove stageMove;
+    CreatorsManager creatorsManager;*/
+    //Mileage mileage;
+    GridManager gridManager;
     DestroyByTime[] destrotBTs;
-    Mileage mileage;
     UICollectionItems ui;
 
     bool isEndGame = false;
-
-    // Use this for initialization
+    
     void Start () {
-        creatorsControll = gameObject.GetComponentInChildren<CreatorsControll>();
-        if (!creatorsControll)
-            Debug.Log("CreatorsControll not Found, please set it as stageControll's child!");
+        /*creatorsManager = gameObject.GetComponentInChildren<CreatorsManager>();
+        if (!creatorsManager)
+            Debug.Log("CreatorsManager not Found, please set it as stageControll's child!");
 
-        stage = gameObject.GetComponentInChildren<StageMove>();
-        if (!stage)
-            Debug.Log("StageMove not Found!, please set it as stageControll's child!");
+        stageMove = gameObject.GetComponentInChildren<StageMove>();
+        if (!stageMove)
+            Debug.Log("StageMove not Found!, please set it as stageControll's child!");*/
 
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
         if (!player)
-            Debug.Log("Player not Found!");
+            Debug.Log("EndControll.cs: Player not Found!");
 
-        mileage = GameObject.FindObjectOfType<Mileage>();
+        gridManager = GameObject.FindObjectOfType<GridManager>();
+        if (!gridManager)
+            Debug.Log("EndControll.cs: Grid Manager not Found!"); 
+
+        /*mileage = GameObject.FindObjectOfType<Mileage>();
         if (!mileage)
-            Debug.Log("Mileage Data not Found!");
+            Debug.Log("Mileage Data not Found!");*/
 
         ui = GameObject.FindObjectOfType<UICollectionItems>();
         if (!ui)
-            Debug.Log("ui not Found!");
+            Debug.Log("EndControll.cs: ui not Found!");
 
     }
-	
-	void Update () {
-	    
-	}
 
     public void endGame()
     {
@@ -50,9 +50,10 @@ public class EndControll : MonoBehaviour {
 
     public void stopGame()
     {
-        stage.stop();
-        creatorsControll.stop();
-        mileage.stop();
+        //stageMove.stop();
+        //creatorsManager.stop();
+        //mileage.stop();
+        gridManager.stop();
         player.setControllable(false);
 
         destrotBTs = GameObject.FindObjectsOfType<DestroyByTime>();
@@ -66,16 +67,17 @@ public class EndControll : MonoBehaviour {
     {
         if (isEndGame)
             return;
-        
-        stage.start();
-        creatorsControll.start();
-        mileage.start();
+
+        //stageMove.play();
+        //creatorsManager.play();
+        //mileage.play();
+        gridManager.play();
         player.setControllable(true);
         
         destrotBTs = GameObject.FindObjectsOfType<DestroyByTime>();
         foreach (DestroyByTime dbt in destrotBTs)
         {
-            dbt.start();
+            dbt.play();
         }
     }
 }

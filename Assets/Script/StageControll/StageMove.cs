@@ -9,9 +9,10 @@ public class StageMove : MonoBehaviour {
     public float spinSpeed = 1.4f;
 
     PlayerController player;
-    Mileage mileage;
+    GridManager gridManager;
+    //Mileage mileage;
 
-    bool isMovable = true;
+    //bool isMovable = true;
     SpinState spinState = SpinState.Stop;
     int totalLine = 4;
     int curLine = 0;
@@ -32,18 +33,22 @@ public class StageMove : MonoBehaviour {
         if (!player)
             Debug.Log("Player not Found!");
 
-        mileage = GameObject.FindObjectOfType<Mileage>();
+        gridManager = GameObject.FindObjectOfType<GridManager>();
+        if (!gridManager)
+            Debug.Log("Grid Manager not Found!");
+
+        /*mileage = GameObject.FindObjectOfType<Mileage>();
         if (!mileage)
-            Debug.Log("Mileage Data not Found!");
+            Debug.Log("Mileage Data not Found!");*/
     }
 	
 	void Update () {
-        moveFloor();
+        MoveFloor();
 	}
 
-    void moveFloor()
+    public void MoveFloor()
     {
-        if(!isMovable)
+        if(!gridManager.isInMovingState())
         {
             return;
         }
@@ -175,7 +180,7 @@ public class StageMove : MonoBehaviour {
 
     void rotation()
     {
-
+        RotateTrackDataReader rtDataReader = gameObject.GetComponent<RotateTrackDataReader>();
     }
 
 
@@ -189,19 +194,20 @@ public class StageMove : MonoBehaviour {
     public void setFowardSpeed(float speed)
     {
         fowardSpeed = speed;
-        mileage.updateSpeed();
+        gridManager.updateSpeed();
+        //mileage.updateSpeed();
     }
 
     //------------------------------------------
 
 
-    public void stop()
+    /*public void stop()
     {
         isMovable = false;
     }
 
-    public void start()
+    public void play()
     {
         isMovable = true;
-    }
+    }*/
 }

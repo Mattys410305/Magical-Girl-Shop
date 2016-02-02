@@ -126,6 +126,11 @@ public class Track : MonoBehaviour {
         return checkLineHasSpace(lineNo, startIndex, checkLength);
     }
 
+    public bool checkMoveByPanel(int toLineNo, int toPos)
+    {
+        return checkLineHasSpace(toLineNo, toPos, 1);
+    }
+
     public void moveItemByDirection(int lineNo, int pos, MoveDestination dir, int blockLength)
     {
         int nextLineNo = 0;

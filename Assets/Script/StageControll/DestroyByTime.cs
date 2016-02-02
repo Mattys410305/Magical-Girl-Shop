@@ -31,7 +31,7 @@ public class DestroyByTime : MonoBehaviour {
         remainTime = Time.time - destoryTime;
     }
 
-    public void start()
+    public void play()
     {
         isGameStop = false;
         destoryTime = Time.time + remainTime;
