@@ -26,9 +26,19 @@ public class ParkourData : MonoBehaviour {
         return recieveCoinNum;
     }
 
+    public void cleanCoins()
+    {
+        recieveCoinNum = 0;
+    }
+
     public void addMileage(int num)
     {
         mileage += num;
+    }
+
+    public void makeZeroMileage()
+    {
+        mileage = 0;
     }
 
     public int getMileage()

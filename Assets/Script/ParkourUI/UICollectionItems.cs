@@ -63,4 +63,10 @@ public class UICollectionItems : MonoBehaviour {
     {
         endTime = Time.time + endDelay;
     }
+
+    public void restart()
+    {
+        isEnd = false;
+        endTime = -1.0f;
+    }
 }

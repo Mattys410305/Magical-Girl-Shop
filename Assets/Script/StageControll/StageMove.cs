@@ -10,9 +10,7 @@ public class StageMove : MonoBehaviour {
 
     PlayerController player;
     GridManager gridManager;
-    //Mileage mileage;
 
-    //bool isMovable = true;
     SpinState spinState = SpinState.Stop;
     int totalLine = 4;
     int curLine = 0;
@@ -36,10 +34,6 @@ public class StageMove : MonoBehaviour {
         gridManager = GameObject.FindObjectOfType<GridManager>();
         if (!gridManager)
             Debug.Log("Grid Manager not Found!");
-
-        /*mileage = GameObject.FindObjectOfType<Mileage>();
-        if (!mileage)
-            Debug.Log("Mileage Data not Found!");*/
     }
 	
 	void Update () {
@@ -195,19 +189,6 @@ public class StageMove : MonoBehaviour {
     {
         fowardSpeed = speed;
         gridManager.updateSpeed();
-        //mileage.updateSpeed();
     }
-
-    //------------------------------------------
-
-
-    /*public void stop()
-    {
-        isMovable = false;
-    }
-
-    public void play()
-    {
-        isMovable = true;
-    }*/
+    
 }

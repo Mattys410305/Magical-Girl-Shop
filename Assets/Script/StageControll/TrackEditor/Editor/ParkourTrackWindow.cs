@@ -5,7 +5,7 @@ using System.Collections;
 public class TrackWindow : EditorWindow {
 
     TrackDataFormat trackData;
-    const string trackPath = "Assets/StageControll/Track/";
+    const string trackPath = "Assets/Resources/Track/";
     const string rawBlockPath = "Assets/StageControll/Block/Track.prefab";
     const string itemPath = "Assets/StageControll/Obstacles/";
 
@@ -222,7 +222,6 @@ public class TrackWindow : EditorWindow {
                     track.moveItemTo(mItem.getLineNo(), mItem.getIndex(), lineNo, index);
                 }
             }
-
         }
     }
 

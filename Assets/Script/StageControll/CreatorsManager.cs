@@ -3,8 +3,9 @@ using System.Collections;
 
 public class CreatorsManager : MonoBehaviour {
 
+	const string itemPath = "Item/";
 
-    public enum CreateMode { Random, Block };
+    public enum CreateMode { Random, Edited };
 
     public ObstacleCreator[] lines;
 
@@ -20,47 +21,22 @@ public class CreatorsManager : MonoBehaviour {
     CreateMode currentMode = CreateMode.Random;
     int[] currentLines;
     MovableItemOnStage[] currentObjects;
-    bool[] changeFlags;
+    bool[] dirtyFlags;
 
-    /*float nextBlock = 0.0f;
-    float interval;
-
-    bool isMoving = true;
-    float recordTimeWhenGameStop;*/
+    TrackDataFormat currentTrack;
+	int trackStartGrid = 0;
 
     void Start () {
 
         currentLines = new int[lines.Length];
         currentObjects = new MovableItemOnStage[lines.Length];
-        changeFlags = new bool[lines.Length];
+        dirtyFlags = new bool[lines.Length];
 
         gridManager = GameObject.FindObjectOfType<GridManager>();
-        /*nextBlock = Time.time;
-        interval = gridManager.getGridLength() / 10.0f;*/
 
         for (int i = 0; i < currentLines.Length; i++)
             currentLines[i] = 0;
     }
-
-    /*void Update () {
-
-        if (nextBlock > Time.time || isMoving == false)
-            return;
-
-        nextBlock += interval;
-        cleanFlags();
-        
-        if (currentMode == CreateMode.Random)
-        {
-            produceInRandomMode();
-        }
-        else if(currentMode == CreateMode.Block)
-        {
-            produceInBlockMode();
-        }
-
-        countDownCurrentLines();
-	}*/
 
     public void Create()
     {
@@ -70,9 +46,9 @@ public class CreatorsManager : MonoBehaviour {
         {
             produceInRandomMode();
         }
-        else if (currentMode == CreateMode.Block)
+        else if (currentMode == CreateMode.Edited)
         {
-            produceInBlockMode();
+            produceInEditedMode();
         }
 
         countDownCurrentLines();
@@ -80,8 +56,8 @@ public class CreatorsManager : MonoBehaviour {
 
     void cleanFlags()
     {
-        for (int i = 0; i < changeFlags.Length; i++)
-            changeFlags[i] = false;
+        for (int i = 0; i < dirtyFlags.Length; i++)
+            dirtyFlags[i] = false;
     }
 
     void countDownCurrentLines()
@@ -106,7 +82,6 @@ public class CreatorsManager : MonoBehaviour {
 
         midLine();
         roundLines();
-        
     }
 
     void setCurrentObjectsInRandom()
@@ -149,7 +124,6 @@ public class CreatorsManager : MonoBehaviour {
 
     MovableItemOnStage chooseItemToRoundLineInRandom(int LineNo)
     {
-
         int totalWeight = 0;
         int random;
         int index;
@@ -174,7 +148,7 @@ public class CreatorsManager : MonoBehaviour {
             tmpWeight += obstacleWeights[index];
             if (tmpWeight >= random)
             {
-                changeFlags[LineNo] = true;
+                dirtyFlags[LineNo] = true;
                 currentLines[LineNo] = obstacleTypes[index].needBlocks;
                 return obstacleTypes[index];
             }
@@ -184,7 +158,7 @@ public class CreatorsManager : MonoBehaviour {
             tmpWeight += collectionWeights[index];
             if (tmpWeight >= random)
             {
-                changeFlags[LineNo] = true;
+                dirtyFlags[LineNo] = true;
                 currentLines[LineNo] = collectionTypes[index].needBlocks;
                 return collectionTypes[index];
             }
@@ -219,7 +193,7 @@ public class CreatorsManager : MonoBehaviour {
             if (tmpWeight >= random)
             {
                 currentLines[lines.Length - 1] = midObstacleTypes[index].needBlocks;
-                changeFlags[lines.Length - 1] = true;
+                dirtyFlags[lines.Length - 1] = true;
                 return midObstacleTypes[index];
             }
         }
@@ -227,39 +201,73 @@ public class CreatorsManager : MonoBehaviour {
         return currentObjects[lines.Length - 1];
     }
 
-    void produceInBlockMode()
+    //---------------------------------------------------------------
+    
+    void produceInEditedMode()
     {
+        setCurrentObjectsInEdited();
 
+        midLine();
+        roundLines();
     }
+
+    void setCurrentObjectsInEdited()
+    {
+		int currentGrid = gridManager.getCurrentGrid();
+		int currentTrackIndex = currentGrid - trackStartGrid;
+		string tmpItemName;
+
+		for(int i=0; i < 5; i++)
+		{
+			if(currentTrack.getLineNo()[i, currentTrackIndex] != 0)
+			{
+				currentLines[i] = currentTrack.getLineNo()[i, currentTrackIndex];
+				tmpItemName = currentTrack.getLineItemNames()[i, currentTrackIndex];
+				currentObjects[i] = Resources.Load<MovableItemOnStage>(itemPath + tmpItemName);
+				if(!currentObjects[i])
+					Debug.Log("CM: can't load: " + tmpItemName);
+				dirtyFlags[i] = true;
+			}
+		}
+    }
+
+    //---------------------------------------------------------------
 
     void midLine()
     {
-        if (changeFlags[lines.Length - 1] && currentObjects[lines.Length - 1])
-            lines[lines.Length - 1].SendMessage("createItem", currentObjects[lines.Length - 1]);
+        if (dirtyFlags[lines.Length - 1] && currentObjects[lines.Length - 1])
+		{
+            lines[lines.Length - 1].createItem(currentObjects[lines.Length - 1]);
+		}
     }
 
     void roundLines()
     {
         for (int i = 0; i < lines.Length - 1; i++)
-        {
-            if(changeFlags[i] && currentObjects[i])
-                lines[i].SendMessage("createItem", currentObjects[i]);
+		{
+            if(dirtyFlags[i] && currentObjects[i])
+				lines[i].createItem(currentObjects[i]);
         }
     }
 
-    //----------------------------------------
 
-    /*public void play()
+    //---------------------------------------------------------------
+
+    public void setToRandomMode()
     {
-        isMoving = true;
-        nextBlock = Time.time + recordTimeWhenGameStop;
+        currentMode = CreateMode.Random;
     }
 
-    public void stop()
+    public void setToEditedMode()
     {
-        isMoving = false;
-        recordTimeWhenGameStop = nextBlock - Time.time;
-    }*/
+        currentMode = CreateMode.Edited;
+    }
 
+	public void setCurrentTrack(TrackDataFormat track)
+    {
+		currentTrack = track;
+		trackStartGrid = gridManager.getCurrentGrid()+1;
+		Debug.Log("SetCTrack: " + trackStartGrid);
+    }
 }
 

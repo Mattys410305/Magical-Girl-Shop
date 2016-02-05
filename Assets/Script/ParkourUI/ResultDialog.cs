@@ -16,11 +16,6 @@ public class ResultDialog : MonoBehaviour
             Debug.Log("ParkourData not Found!");
     }
 
-    void Update()
-    {
-
-    }
-
     void OnGUI()
     {
         if (!isEnd)
@@ -52,17 +47,27 @@ public class ResultDialog : MonoBehaviour
                                 25.0f),
                       mileageText);
 
-        GUI.Button(new Rect(90.0f,
+        if( GUI.Button(new Rect(90.0f,
                                 Screen.height - 120.0f,
                                 Screen.width - 180.0f,
                                 25.0f),
                    "Button"
-                                );
+                                ))
+        {
+            restart();
+        }
     }
 
     public void showResult()
     {
         isEnd = true;
+    }
+
+    void restart()
+    {
+        isEnd = false;
+        EndControll endControll = GameObject.FindObjectOfType<EndControll>();
+        endControll.restartGame();
     }
 }
 

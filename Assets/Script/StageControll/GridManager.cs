@@ -9,10 +9,10 @@ public class GridManager : MonoBehaviour {
     CreatorsManager creatorsManager;
     Mileage mileage;
 
-    int currentGrid = 0;
+    int currentGrid;
     float interval;
     float nextGrid;
-    bool isMoving = true;
+    bool isMoving;
     float recordTimeWhenGameStop = 0.0f;
 
     void Start () {
@@ -20,6 +20,8 @@ public class GridManager : MonoBehaviour {
         creatorsManager = GameObject.FindObjectOfType<CreatorsManager>();
         mileage = GameObject.FindObjectOfType<Mileage>();
 
+        isMoving = false;
+        currentGrid = 0;
         nextGrid = Time.time;
         interval = gridLength / stageMove.fowardSpeed;
     }
@@ -28,9 +30,9 @@ public class GridManager : MonoBehaviour {
         if (nextGrid > Time.time || isMoving == false)
             return;
 
+        currentGrid++;
         nextGrid += interval;
 
-        stageMove.MoveFloor();
         creatorsManager.Create();
         mileage.updateStopwatch();
     }
@@ -45,10 +47,16 @@ public class GridManager : MonoBehaviour {
         return gridLength;
     }
 
+    public int getCurrentGrid()
+    {
+        return currentGrid;
+    }
+
     public bool isInMovingState()
     {
         return isMoving;
     }
+
 
     public void play()
     {
@@ -60,5 +68,14 @@ public class GridManager : MonoBehaviour {
     {
         isMoving = false;
         recordTimeWhenGameStop = nextGrid - Time.time;
+    }
+
+    public void initAndStart()
+    {
+		Debug.Log("initAndStart");
+        isMoving = true;
+        nextGrid = Time.time + interval;
+        currentGrid = 0;
+        mileage.makeZero();
     }
 }

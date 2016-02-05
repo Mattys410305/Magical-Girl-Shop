@@ -37,8 +37,7 @@ public class MovableItemOnStage : MonoBehaviour {
         moveItem(lineNo, depth);
         setTrackLineCoordinate(lineNo, depth);
     }
-
-
+    
     void moveItem(int toLineNo, int toLineIndex)
     {
         Vector3 beginng = TranslateTrackLineToWorldCoordinate(posLineNo, posIndex);
@@ -50,9 +49,6 @@ public class MovableItemOnStage : MonoBehaviour {
 
     Vector3 TranslateTrackLineToWorldCoordinate(int lineNo, int index)
     {
-        /*Transform parent = transform.parent;
-        Transform originPoint = parent.transform;*/
-
         Vector3 lineOffset = getLineOffset(lineNo);
         Vector3 indexOffset = getIndexOffset(index);
 
