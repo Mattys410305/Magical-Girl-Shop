@@ -9,6 +9,8 @@ public class PlayerController : MonoBehaviour {
     public enum Place { Mid, LeftEnd, RightEnd };
     public GameObject Player;
 
+	public float spinSpeed = 1.0f;
+	public float diveSpeed = 3.0f;
 
     public float Gravity = 20.0f;
     public float DodgeSpeed = 4.0f;
@@ -25,11 +27,17 @@ public class PlayerController : MonoBehaviour {
     private float verticalSpeed = 0.0f;
 	//private float moveSpeed = 0.0f;
 
-    private float posY;
+	private float posY;
+
+	private GameObject PlayerModel;
 
     Vector2 touchStartPoint = new Vector2(0,0);
 
     void Start () {
+		PlayerAnimator playerAnimator = gameObject.GetComponentInChildren<PlayerAnimator>();
+		PlayerModel = playerAnimator.gameObject;
+		if (!PlayerModel)
+			Debug.Log("PlayerController.cs: PlayerModel not Found!");
 	}
 
     void Update(){
@@ -44,7 +52,9 @@ public class PlayerController : MonoBehaviour {
         verticalMove = getVerticalMove();
 
         movement = horizotalMove + verticalMove;
-        movePlayer(movement);
+		movePlayer(movement);
+		dodgeDive();
+		spinPlayer();
     }
 
     Vector3 getHorizontalMove()
@@ -175,6 +185,79 @@ public class PlayerController : MonoBehaviour {
         controller.Move(movement);
     }
 
+	void spinPlayer()
+	{
+		Quaternion target;
+
+		switch(movingState)
+		{
+		case MovingState.MovingRight:
+			target = Quaternion.Euler(0.0f, -65.0f, 0);
+
+			if(PlayerModel.transform.localRotation == target)
+			{
+				movingState = MovingState.Stopping;
+			}
+			PlayerModel.transform.localRotation = Quaternion.RotateTowards(PlayerModel.transform.localRotation, target, spinSpeed);
+			break;
+
+		case MovingState.MovingLeft:
+			target = Quaternion.Euler(0.0f, 65.0f, 0);
+
+			if(PlayerModel.transform.localRotation == target)
+			{
+				movingState = MovingState.Stopping;
+			}
+			PlayerModel.transform.localRotation = Quaternion.RotateTowards(PlayerModel.transform.localRotation, target, spinSpeed);
+			break;
+
+		case MovingState.Stopping:
+			target = Quaternion.Euler(0.0f, 0.0f, 0.0f);
+
+			if(PlayerModel.transform.localRotation == target)
+			{
+				movingState = MovingState.Stop;
+			}
+			PlayerModel.transform.localRotation = Quaternion.RotateTowards(PlayerModel.transform.localRotation, target, spinSpeed/1.6f);
+				
+			break;
+
+		default:
+			break;
+		}
+	}
+
+	void dodgeDive()
+	{
+		Quaternion target;
+
+		switch(dodgingState)
+		{
+		case DodgingState.Dodging:
+			target = Quaternion.Euler(130.0f, 0.0f, 0.0f);
+
+			if(transform.rotation == target)
+			{
+				return;
+			}
+
+			transform.rotation = Quaternion.RotateTowards(transform.rotation, target, diveSpeed);
+			break;
+
+		case DodgingState.Stay:
+			target = Quaternion.Euler(60.0f, 0.0f, 0.0f);
+
+			if(transform.rotation == target)
+			{
+				return;
+			}
+
+			transform.rotation = Quaternion.RotateTowards(transform.rotation, target, diveSpeed/0.8f);
+
+			break;
+			
+		}
+	}
 
     //------------------------------------------
 
@@ -201,6 +284,16 @@ public class PlayerController : MonoBehaviour {
 	{
 		//Debug.Log("Set: "+Controllable);
 		isControllable = Controllable;
+	}
+
+	public void leftMove()
+	{
+		movingState = MovingState.MovingLeft;
+	}
+
+	public void rightMove()
+	{
+		movingState = MovingState.MovingRight;
 	}
 
 }

@@ -30,28 +30,28 @@ public class ResultDialog : MonoBehaviour
 
         GUI.Label(new Rect(0.0f,
                              0.0f,
-                             Screen.width - 0.0f,
-                             Screen.height - 0.0f),
+                             Screen.width,
+                             Screen.height),
                    ""
             );
         
-        GUI.TextArea(new Rect( 90.0f,
-                                200.0f,
-                                Screen.width - 180.0f,
-                                25.0f),
+		GUI.TextArea(new Rect( Screen.width/2 - Screen.width/2.5f/2,
+								Screen.height/2 - Screen.height/48*8,
+                                Screen.width/2.5f,
+								Screen.height/24),
                       coinText);
 
-        GUI.TextArea(new Rect( 90.0f,
-                                230.0f,
-                                Screen.width - 180.0f,
-                                25.0f),
+		GUI.TextArea(new Rect( Screen.width/2 - Screen.width/2.5f/2,
+								Screen.height/2 - Screen.height/48*5,
+								Screen.width/2.5f,
+								Screen.height/24),
                       mileageText);
 
-        if( GUI.Button(new Rect(90.0f,
-                                Screen.height - 120.0f,
-                                Screen.width - 180.0f,
-                                25.0f),
-                   "Button"
+        if( GUI.Button(new Rect(0.0f,
+                                0.0f,
+                                Screen.width,
+								Screen.height),
+                   "Click to Restart."
                                 ))
         {
             restart();

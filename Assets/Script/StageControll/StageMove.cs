@@ -123,11 +123,13 @@ public class StageMove : MonoBehaviour {
         if ( key > 0 )
         {
             spinState = SpinState.Right;
+			player.rightMove();
             targetLine = (curLine + 3) % 4;
         }
         else if ( key < 0)
         {
-            spinState = SpinState.Left;
+			spinState = SpinState.Left;
+			player.leftMove();
             targetLine = (curLine + 1) % 4;
         }
     }

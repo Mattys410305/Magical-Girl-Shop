@@ -11,7 +11,7 @@ public class MainParkour : MonoBehaviour {
 	int totalLength;
 	int currentLength;
 
-	CreatorsManager.CreateMode createMode = CreatorsManager.CreateMode.Edited;
+	public CreatorsManager.CreateMode createMode = CreatorsManager.CreateMode.Edited;
 
 	const string trackPath = "Track/";
 

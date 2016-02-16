@@ -4,7 +4,8 @@ using System.Collections;
 public class EndControll : MonoBehaviour
 {
 
-    public PlayerController player;
+    PlayerController player;
+	PlayerAnimator playerAnimator;
     GridManager gridManager;
     DestroyByTime[] destrotBTs;
     UICollectionItems ui;
@@ -19,6 +20,10 @@ public class EndControll : MonoBehaviour
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
         if (!player)
             Debug.Log("EndControll.cs: Player not Found!");
+
+		playerAnimator = player.GetComponentInChildren<PlayerAnimator>();
+		if (!playerAnimator)
+			Debug.Log("EndControll.cs: PlayerAnimator not Found!");
 
         gridManager = GameObject.FindObjectOfType<GridManager>();
         if (!gridManager)
@@ -47,7 +52,8 @@ public class EndControll : MonoBehaviour
     public void stopGame()
     {
         gridManager.stop();
-        player.setControllable(false);
+		player.setControllable(false);
+		playerAnimator.goDown();
 
         destrotBTs = GameObject.FindObjectsOfType<DestroyByTime>();
         foreach (DestroyByTime dbt in destrotBTs)
@@ -73,7 +79,8 @@ public class EndControll : MonoBehaviour
 
     public void restartGame()
     {
-        player.setControllable(true);
+		player.setControllable(true);
+		playerAnimator.revive();
         destrotBTs = GameObject.FindObjectsOfType<DestroyByTime>();
         foreach (DestroyByTime dbt in destrotBTs)
         {

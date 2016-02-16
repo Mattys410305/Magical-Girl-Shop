@@ -194,6 +194,7 @@ public class TrackWindow : EditorWindow {
         selectAsset = Selection.objects[0];
         
         trackData = AssetDatabase.LoadAssetAtPath<TrackDataFormat>(trackPath + selectAsset.name + ".asset");
+		newTrackName = trackData.name;
         newTrack();
         setAssetOnTrack();
     }

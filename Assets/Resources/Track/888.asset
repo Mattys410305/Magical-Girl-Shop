@@ -12,9 +12,8 @@ MonoBehaviour:
   m_Name: 888
   m_EditorClassIdentifier: 
   trackLength: 50
-  keyLine: 5a000000a100000048000000
-  valueNeedBlocks: 0f0000000a0000001e000000
+  keyLine: 5a000000a1000000
+  valueNeedBlocks: 0f0000000a000000
   valueItemNames:
   - ObstacleType1
   - ObstacleTypeFloatUp1
-  - ObstacleType2
